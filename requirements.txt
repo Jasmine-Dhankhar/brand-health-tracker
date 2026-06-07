@@ -1,0 +1,11 @@
+streamlit
+plotly
+pandas
+openai
+requests
+python-dotenv
+vaderSentiment
+wordcloud
+google-api-python-client
+newsapi-python
+pytrends
