@@ -289,8 +289,8 @@ st.caption(
     "Months with fewer than 5 data points may show extreme values."
 )
 st.markdown("---")
-    # ------------------ SHARE OF VOICE ------------------
-    if not competitor_df.empty:
+   # ------------------ SHARE OF VOICE ------------------
+if not competitor_df.empty:
     st.subheader("📢 Share of Voice")
     sov1, sov2 = calculate_share_of_voice(primary_df, competitor_df)
 
