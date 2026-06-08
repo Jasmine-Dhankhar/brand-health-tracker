@@ -241,26 +241,27 @@ with col2:
 st.markdown("---")
 
     # ------------------ SENTIMENT TREND ------------------
-    st.subheader("📈 Sentiment Trend Over Time")
+   # ------------------ SENTIMENT TREND ------------------
+st.subheader("📈 Sentiment Trend Over Time")
 
-    primary_df["month"] = primary_df["date"].dt.to_period("M").astype(str)
-    monthly = primary_df.groupby("month").apply(
+primary_df["month"] = primary_df["date"].dt.to_period("M").astype(str)
+monthly = primary_df.groupby("month").apply(
     lambda x: round((x["sentiment"] == "positive").mean() * 100, 1)
     if len(x) >= 5 else None
 ).dropna().reset_index()
-    monthly.columns = ["month", "positive_pct"]
-    monthly = monthly.sort_values("month").tail(24)
+monthly.columns = ["month", "positive_pct"]
+monthly = monthly.sort_values("month").tail(24)
 
-    fig2 = go.Figure()
-    fig2.add_trace(go.Scatter(
-        x=monthly["month"],
-        y=monthly["positive_pct"],
-        name=primary_brand,
-        line=dict(color="#00b4d8", width=2),
-        mode="lines+markers"
-    ))
+fig2 = go.Figure()
+fig2.add_trace(go.Scatter(
+    x=monthly["month"],
+    y=monthly["positive_pct"],
+    name=primary_brand,
+    line=dict(color="#00b4d8", width=2),
+    mode="lines+markers"
+))
 
-    if not competitor_df.empty:
+if not competitor_df.empty:
     competitor_df["month"] = competitor_df["date"].dt.to_period("M").astype(str)
     comp_monthly = competitor_df.groupby("month").apply(
         lambda x: round((x["sentiment"] == "positive").mean() * 100, 1)
@@ -269,26 +270,25 @@ st.markdown("---")
     comp_monthly.columns = ["month", "positive_pct"]
     comp_monthly = comp_monthly.sort_values("month").tail(24)
 
-        fig2.add_trace(go.Scatter(
-            x=comp_monthly["month"],
-            y=comp_monthly["positive_pct"],
-            name=competitor_brand,
-            line=dict(color="#f77f00", width=2, dash="dot"),
-            mode="lines+markers"
-        ))
+    fig2.add_trace(go.Scatter(
+        x=comp_monthly["month"],
+        y=comp_monthly["positive_pct"],
+        name=competitor_brand,
+        line=dict(color="#f77f00", width=2, dash="dot"),
+        mode="lines+markers"
+    ))
 
-    fig2.update_layout(
-        yaxis_title="% Positive Sentiment",
-        xaxis_title="Month",
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
-    )
-    st.plotly_chart(fig2, use_container_width=True)
-    st.caption(
-        "⚠️ Trend based on YouTube comment publish dates. "
-        "Months with fewer than 5 data points may show extreme values."
-    )
-    st.markdown("---")
-
+fig2.update_layout(
+    yaxis_title="% Positive Sentiment",
+    xaxis_title="Month",
+    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+)
+st.plotly_chart(fig2, use_container_width=True)
+st.caption(
+    "⚠️ Trend based on YouTube comment publish dates. "
+    "Months with fewer than 5 data points may show extreme values."
+)
+st.markdown("---")
     # ------------------ SHARE OF VOICE ------------------
     if not competitor_df.empty:
     st.subheader("📢 Share of Voice")
