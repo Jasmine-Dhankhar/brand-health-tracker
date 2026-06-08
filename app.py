@@ -6,7 +6,6 @@ import pandas as pd
 from collections import Counter
 import re
 from openai import OpenAI
-from data_collector import get_brand_data
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -121,22 +120,27 @@ def calculate_share_of_voice(brand1_df, brand2_df):
     return sov1, sov2
 
 # ------------------ FETCH DATA ON ANALYSE ------------------
+@st.cache_data
+def load_all_data():
+    df = pd.read_csv("brand_data.csv", parse_dates=["date"])
+    return df
+
+all_data = load_all_data()
+
 if analyse_button:
-    # Reset audit result when new analysis runs
     st.session_state.audit_result = None
 
-    with st.spinner(f"Pulling data for {primary_brand}... this takes 20-30 seconds"):
-        st.session_state.primary_df = get_brand_data(primary_brand)
-        st.session_state.primary_brand = primary_brand
+    primary_df = all_data[all_data["brand"] == primary_brand].copy()
+    st.session_state.primary_df = primary_df
+    st.session_state.primary_brand = primary_brand
 
-    if not competitor_brand == "None":
-        with st.spinner(f"Pulling data for {competitor_brand}..."):
-            st.session_state.competitor_df = get_brand_data(competitor_brand)
-            st.session_state.competitor_brand = competitor_brand
+    if competitor_brand != "None":
+        competitor_df = all_data[all_data["brand"] == competitor_brand].copy()
+        st.session_state.competitor_df = competitor_df
+        st.session_state.competitor_brand = competitor_brand
     else:
         st.session_state.competitor_df = pd.DataFrame()
         st.session_state.competitor_brand = None
-
 # ------------------ DISPLAY RESULTS ------------------
 if not st.session_state.primary_df.empty:
 
