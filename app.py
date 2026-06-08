@@ -51,7 +51,6 @@ if "audit_result" not in st.session_state:
     st.session_state.audit_result = None
 
 # ------------------ SIDEBAR ------------------
-# ------------------ SIDEBAR ------------------
 st.sidebar.header("🔍 Brand Selection")
 
 primary_brand = st.sidebar.selectbox(
@@ -146,6 +145,7 @@ if analyse_button:
     else:
         st.session_state.competitor_df = pd.DataFrame()
         st.session_state.competitor_brand = None
+
 # ------------------ DISPLAY RESULTS ------------------
 if not st.session_state.primary_df.empty:
 
@@ -166,8 +166,7 @@ if not st.session_state.primary_df.empty:
     st.markdown("---")
 
     # ------------------ KPI CARDS ------------------
-   # ------------------ KPI CARDS ------------------
-st.markdown(f"""
+    st.markdown(f"""
 <div style='display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;'>
     <div style='background: #1a1a2e; border: 1px solid #00b4d8;
                 border-radius: 12px; padding: 20px; text-align: center;'>
@@ -195,106 +194,106 @@ st.markdown(f"""
     </div>
 </div>
 """, unsafe_allow_html=True)
-st.markdown("---")
+    st.markdown("---")
 
     # ------------------ SENTIMENT BREAKDOWN ------------------
-st.subheader("📊 Sentiment Breakdown")
-col1, col2 = st.columns(2)
+    st.subheader("📊 Sentiment Breakdown")
+    col1, col2 = st.columns(2)
 
-with col1:
-    sentiment_data = pd.DataFrame({
-        "Sentiment": ["Positive", "Neutral", "Negative"],
-        "Count": [pos, neu, neg],
-        "Percentage": [
-            round((pos/total)*100, 1),
-            round((neu/total)*100, 1),
-            round((neg/total)*100, 1)
-        ]
-    })
-    fig = px.bar(
-        sentiment_data,
-        x="Sentiment",
-        y="Percentage",
-        color="Sentiment",
-        color_discrete_map={
-            "Positive": "#1D9E75",
-            "Neutral": "#B4B2A9",
-            "Negative": "#E24B4A"
-        },
-        title=f"Sentiment Distribution — {primary_brand}"
-    )
-    st.plotly_chart(fig, use_container_width=True)
+    with col1:
+        sentiment_data = pd.DataFrame({
+            "Sentiment": ["Positive", "Neutral", "Negative"],
+            "Count": [pos, neu, neg],
+            "Percentage": [
+                round((pos/total)*100, 1),
+                round((neu/total)*100, 1),
+                round((neg/total)*100, 1)
+            ]
+        })
+        fig = px.bar(
+            sentiment_data,
+            x="Sentiment",
+            y="Percentage",
+            color="Sentiment",
+            color_discrete_map={
+                "Positive": "#1D9E75",
+                "Neutral": "#B4B2A9",
+                "Negative": "#E24B4A"
+            },
+            title=f"Sentiment Distribution — {primary_brand}"
+        )
+        st.plotly_chart(fig, use_container_width=True)
 
-with col2:
-    st.markdown("**Sentiment scores:**")
-    st.markdown(f"🟢 Positive: **{round((pos/total)*100, 1)}%**")
-    st.progress(pos/total)
-    st.markdown(f"⚪ Neutral: **{round((neu/total)*100, 1)}%**")
-    st.progress(neu/total)
-    st.markdown(f"🔴 Negative: **{round((neg/total)*100, 1)}%**")
-    st.progress(neg/total)
+    with col2:
+        st.markdown("**Sentiment scores:**")
+        st.markdown(f"🟢 Positive: **{round((pos/total)*100, 1)}%**")
+        st.progress(pos/total)
+        st.markdown(f"⚪ Neutral: **{round((neu/total)*100, 1)}%**")
+        st.progress(neu/total)
+        st.markdown(f"🔴 Negative: **{round((neg/total)*100, 1)}%**")
+        st.progress(neg/total)
+        st.markdown("---")
+        st.markdown("**Data sources:**")
+        st.markdown(f"📺 YouTube: **{yt_count}** comments")
+        st.markdown(f"📰 News: **{news_count}** articles")
+
     st.markdown("---")
-    st.markdown("**Data sources:**")
-    st.markdown(f"📺 YouTube: **{yt_count}** comments")
-    st.markdown(f"📰 News: **{news_count}** articles")
-
-st.markdown("---")
 
     # ------------------ SENTIMENT TREND ------------------
-   # ------------------ SENTIMENT TREND ------------------
-st.subheader("📈 Sentiment Trend Over Time")
+    st.subheader("📈 Sentiment Trend Over Time")
 
-primary_df["month"] = primary_df["date"].dt.to_period("M").astype(str)
-monthly = primary_df.groupby("month").apply(
-    lambda x: round((x["sentiment"] == "positive").mean() * 100, 1)
-    if len(x) >= 5 else None
-).dropna().reset_index()
-monthly.columns = ["month", "positive_pct"]
-monthly = monthly.sort_values("month").tail(24)
-
-fig2 = go.Figure()
-fig2.add_trace(go.Scatter(
-    x=monthly["month"],
-    y=monthly["positive_pct"],
-    name=primary_brand,
-    line=dict(color="#00b4d8", width=2),
-    mode="lines+markers"
-))
-
-if not competitor_df.empty:
-    competitor_df["month"] = competitor_df["date"].dt.to_period("M").astype(str)
-    comp_monthly = competitor_df.groupby("month").apply(
+    primary_df["month"] = primary_df["date"].dt.to_period("M").astype(str)
+    monthly = primary_df.groupby("month").apply(
         lambda x: round((x["sentiment"] == "positive").mean() * 100, 1)
         if len(x) >= 5 else None
     ).dropna().reset_index()
-    comp_monthly.columns = ["month", "positive_pct"]
-    comp_monthly = comp_monthly.sort_values("month").tail(24)
+    monthly.columns = ["month", "positive_pct"]
+    monthly = monthly.sort_values("month").tail(24)
 
+    fig2 = go.Figure()
     fig2.add_trace(go.Scatter(
-        x=comp_monthly["month"],
-        y=comp_monthly["positive_pct"],
-        name=competitor_brand,
-        line=dict(color="#f77f00", width=2, dash="dot"),
+        x=monthly["month"],
+        y=monthly["positive_pct"],
+        name=primary_brand,
+        line=dict(color="#00b4d8", width=2),
         mode="lines+markers"
     ))
 
-fig2.update_layout(
-    yaxis_title="% Positive Sentiment",
-    xaxis_title="Month",
-    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
-)
-st.plotly_chart(fig2, use_container_width=True)
-st.caption(
-    "⚠️ Trend based on YouTube comment publish dates. "
-    "Months with fewer than 5 data points may show extreme values."
-)
-st.markdown("---")
-   # ------------------ SHARE OF VOICE ------------------
-if not competitor_df.empty:
-    st.subheader("📢 Share of Voice")
-    sov1, sov2 = calculate_share_of_voice(primary_df, competitor_df)
+    if not competitor_df.empty:
+        competitor_df["month"] = competitor_df["date"].dt.to_period("M").astype(str)
+        comp_monthly = competitor_df.groupby("month").apply(
+            lambda x: round((x["sentiment"] == "positive").mean() * 100, 1)
+            if len(x) >= 5 else None
+        ).dropna().reset_index()
+        comp_monthly.columns = ["month", "positive_pct"]
+        comp_monthly = comp_monthly.sort_values("month").tail(24)
 
-    st.markdown(f"""
+        fig2.add_trace(go.Scatter(
+            x=comp_monthly["month"],
+            y=comp_monthly["positive_pct"],
+            name=competitor_brand,
+            line=dict(color="#f77f00", width=2, dash="dot"),
+            mode="lines+markers"
+        ))
+
+    fig2.update_layout(
+        yaxis_title="% Positive Sentiment",
+        xaxis_title="Month",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+    )
+    st.plotly_chart(fig2, use_container_width=True)
+    st.caption(
+        "⚠️ Trend based on YouTube comment publish dates. "
+        "Months with fewer than 5 data points may show extreme values."
+    )
+    st.markdown("---")
+
+    # ------------------ SHARE OF VOICE ------------------
+    if not competitor_df.empty:
+        st.subheader("📢 Share of Voice")
+        sov1, sov2 = calculate_share_of_voice(primary_df, competitor_df)
+
+        st.markdown(f"""
     <div style='display: grid; grid-template-columns: 1fr 1fr; gap: 16px;'>
         <div style='background: #1a1a2e; border: 1px solid #00b4d8;
                     border-radius: 12px; padding: 20px; text-align: center;'>
@@ -310,8 +309,8 @@ if not competitor_df.empty:
         </div>
     </div>
     """, unsafe_allow_html=True)
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown("---")
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("---")
 
     # ------------------ CONSUMER KEYWORDS ------------------
     st.subheader("💬 Consumer Perception Keywords")
@@ -394,7 +393,6 @@ Data:
             except Exception as e:
                 st.error(f"AI analysis failed: {e}")
 
-    # Display audit result if it exists in session state
     if st.session_state.audit_result:
         st.success("Audit complete!")
         st.markdown("### 📋 Brand Audit Report")
