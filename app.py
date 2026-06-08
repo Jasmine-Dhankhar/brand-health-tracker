@@ -424,7 +424,7 @@ else:
                     border-radius: 12px;
                     padding: 24px;
                     text-align: center;
-                    height: 220px;'>
+                    height: 260px;'>
             <h2 style='color: #00b4d8; margin: 0 0 8px;'>🌍</h2>
             <h3 style='color: white; margin: 0 0 12px;'>Global Luxury</h3>
             <p style='color: #aaa; font-size: 14px; line-height: 1.8; margin: 0;'>
@@ -440,7 +440,7 @@ else:
                     border-radius: 12px;
                     padding: 24px;
                     text-align: center;
-                    height: 220px;'>
+                    height: 260px;'>
             <h2 style='color: #06d6a0; margin: 0 0 8px;'>🇮🇳</h2>
             <h3 style='color: white; margin: 0 0 12px;'>Indian Premium</h3>
             <p style='color: #aaa; font-size: 14px; line-height: 1.8; margin: 0;'>
@@ -456,7 +456,7 @@ else:
                     border-radius: 12px;
                     padding: 24px;
                     text-align: center;
-                    height: 220px;'>
+                    height: 260px;'>
             <h2 style='color: #f77f00; margin: 0 0 8px;'>🇮🇳</h2>
             <h3 style='color: white; margin: 0 0 12px;'>Indian Mass Market</h3>
             <p style='color: #aaa; font-size: 14px; line-height: 1.8; margin: 0;'>
