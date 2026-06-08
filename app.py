@@ -99,6 +99,12 @@ def get_top_keywords(df, sentiment_filter="positive", top_n=20):
         "engage", "fogg", "titan", "aventus", "opium", "perfume",
         "fragrance", "cologne", "scent", "video", "channel", "watch",
         "brand", "product", "review", "smell", "smells", "wearing", "wear"
+        "dont", "still", "most", "because", "people", "think",
+        "even", "please", "videos", "also", "time", "make",
+        "know", "want", "need", "much", "many", "only", "other",
+        "some", "them", "been", "have", "come", "back", "well",
+        "bought", "since", "every", "over", "after", "before",
+        "better", "never", "always", "another", "something"
     }
     filtered = df[df["sentiment"] == sentiment_filter]["text"]
     words = []
@@ -160,12 +166,36 @@ if not st.session_state.primary_df.empty:
     st.markdown("---")
 
     # ------------------ KPI CARDS ------------------
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Overall Sentiment", f"{positive_pct}% positive")
-    col2.metric("Data Points Analysed", f"{total:,}")
-    col3.metric("YouTube Comments", f"{yt_count:,}")
-    col4.metric("News Articles", f"{news_count:,}")
-    st.markdown("---")
+   # ------------------ KPI CARDS ------------------
+st.markdown(f"""
+<div style='display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;'>
+    <div style='background: #1a1a2e; border: 1px solid #00b4d8;
+                border-radius: 12px; padding: 20px; text-align: center;'>
+        <p style='color: #888; font-size: 13px; margin: 0 0 8px;'>Overall Sentiment</p>
+        <p style='color: #00b4d8; font-size: 28px; font-weight: 700; margin: 0;'>{positive_pct}%</p>
+        <p style='color: #888; font-size: 12px; margin: 4px 0 0;'>positive</p>
+    </div>
+    <div style='background: #1a1a2e; border: 1px solid #555;
+                border-radius: 12px; padding: 20px; text-align: center;'>
+        <p style='color: #888; font-size: 13px; margin: 0 0 8px;'>Data Points</p>
+        <p style='color: white; font-size: 28px; font-weight: 700; margin: 0;'>{total:,}</p>
+        <p style='color: #888; font-size: 12px; margin: 4px 0 0;'>analysed</p>
+    </div>
+    <div style='background: #1a1a2e; border: 1px solid #555;
+                border-radius: 12px; padding: 20px; text-align: center;'>
+        <p style='color: #888; font-size: 13px; margin: 0 0 8px;'>YouTube Comments</p>
+        <p style='color: white; font-size: 28px; font-weight: 700; margin: 0;'>{yt_count:,}</p>
+        <p style='color: #888; font-size: 12px; margin: 4px 0 0;'>comments</p>
+    </div>
+    <div style='background: #1a1a2e; border: 1px solid #555;
+                border-radius: 12px; padding: 20px; text-align: center;'>
+        <p style='color: #888; font-size: 13px; margin: 0 0 8px;'>News Articles</p>
+        <p style='color: white; font-size: 28px; font-weight: 700; margin: 0;'>{news_count:,}</p>
+        <p style='color: #888; font-size: 12px; margin: 4px 0 0;'>articles</p>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+st.markdown("---")
 
     # ------------------ SENTIMENT BREAKDOWN ------------------
     st.subheader("📊 Sentiment Breakdown")
@@ -215,8 +245,9 @@ if not st.session_state.primary_df.empty:
 
     primary_df["month"] = primary_df["date"].dt.to_period("M").astype(str)
     monthly = primary_df.groupby("month").apply(
-        lambda x: round((x["sentiment"] == "positive").mean() * 100, 1)
-    ).reset_index()
+    lambda x: round((x["sentiment"] == "positive").mean() * 100, 1)
+    if len(x) >= 5 else None
+).dropna().reset_index()
     monthly.columns = ["month", "positive_pct"]
     monthly = monthly.sort_values("month").tail(24)
 
@@ -230,12 +261,13 @@ if not st.session_state.primary_df.empty:
     ))
 
     if not competitor_df.empty:
-        competitor_df["month"] = competitor_df["date"].dt.to_period("M").astype(str)
-        comp_monthly = competitor_df.groupby("month").apply(
-            lambda x: round((x["sentiment"] == "positive").mean() * 100, 1)
-        ).reset_index()
-        comp_monthly.columns = ["month", "positive_pct"]
-        comp_monthly = comp_monthly.sort_values("month").tail(24)
+    competitor_df["month"] = competitor_df["date"].dt.to_period("M").astype(str)
+    comp_monthly = competitor_df.groupby("month").apply(
+        lambda x: round((x["sentiment"] == "positive").mean() * 100, 1)
+        if len(x) >= 5 else None
+    ).dropna().reset_index()
+    comp_monthly.columns = ["month", "positive_pct"]
+    comp_monthly = comp_monthly.sort_values("month").tail(24)
 
         fig2.add_trace(go.Scatter(
             x=comp_monthly["month"],
@@ -259,17 +291,27 @@ if not st.session_state.primary_df.empty:
 
     # ------------------ SHARE OF VOICE ------------------
     if not competitor_df.empty:
-        st.subheader("📢 Share of Voice")
-        sov1, sov2 = calculate_share_of_voice(primary_df, competitor_df)
+    st.subheader("📢 Share of Voice")
+    sov1, sov2 = calculate_share_of_voice(primary_df, competitor_df)
 
-        col1, col2 = st.columns(2)
-        with col1:
-            st.metric(primary_brand, f"{sov1}% share of voice")
-            st.progress(sov1/100)
-        with col2:
-            st.metric(competitor_brand, f"{sov2}% share of voice")
-            st.progress(sov2/100)
-        st.markdown("---")
+    st.markdown(f"""
+    <div style='display: grid; grid-template-columns: 1fr 1fr; gap: 16px;'>
+        <div style='background: #1a1a2e; border: 1px solid #00b4d8;
+                    border-radius: 12px; padding: 20px; text-align: center;'>
+            <p style='color: #888; font-size: 13px; margin: 0 0 8px;'>{primary_brand}</p>
+            <p style='color: #00b4d8; font-size: 32px; font-weight: 700; margin: 0;'>{sov1}%</p>
+            <p style='color: #888; font-size: 12px; margin: 4px 0 0;'>share of voice</p>
+        </div>
+        <div style='background: #2e1a0a; border: 1px solid #f77f00;
+                    border-radius: 12px; padding: 20px; text-align: center;'>
+            <p style='color: #888; font-size: 13px; margin: 0 0 8px;'>{competitor_brand}</p>
+            <p style='color: #f77f00; font-size: 32px; font-weight: 700; margin: 0;'>{sov2}%</p>
+            <p style='color: #888; font-size: 12px; margin: 4px 0 0;'>share of voice</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("---")
 
     # ------------------ CONSUMER KEYWORDS ------------------
     st.subheader("💬 Consumer Perception Keywords")
@@ -374,14 +416,53 @@ Data:
         )
 
 else:
-    st.markdown("### 👈 Select a brand from the sidebar to get started")
+    st.markdown("---")
     col1, col2, col3 = st.columns(3)
+
     with col1:
-        st.markdown("**Global Luxury**")
-        st.markdown("- Dior Sauvage\n- Creed Aventus\n- YSL Black Opium")
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1a1a2e, #16213e);
+                    border: 1px solid #0f3460;
+                    border-radius: 12px;
+                    padding: 24px;
+                    text-align: center;'>
+            <h2 style='color: #00b4d8; margin: 0 0 8px;'>🌍</h2>
+            <h3 style='color: white; margin: 0 0 12px;'>Global Luxury</h3>
+            <p style='color: #aaa; font-size: 14px; line-height: 1.8; margin: 0;'>
+                Dior Sauvage<br>Creed Aventus<br>YSL Black Opium
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+
     with col2:
-        st.markdown("**Indian Premium**")
-        st.markdown("- Skinn by Titan\n- Bella Vita Perfume")
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #1a2e1a, #162116);
+                    border: 1px solid #0f6030;
+                    border-radius: 12px;
+                    padding: 24px;
+                    text-align: center;'>
+            <h2 style='color: #06d6a0; margin: 0 0 8px;'>🇮🇳</h2>
+            <h3 style='color: white; margin: 0 0 12px;'>Indian Premium</h3>
+            <p style='color: #aaa; font-size: 14px; line-height: 1.8; margin: 0;'>
+                Skinn by Titan<br>Bella Vita Perfume
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+
     with col3:
-        st.markdown("**Indian Mass Market**")
-        st.markdown("- Engage Perfume\n- Fogg Perfume")
+        st.markdown("""
+        <div style='background: linear-gradient(135deg, #2e1a1a, #211616);
+                    border: 1px solid #602010;
+                    border-radius: 12px;
+                    padding: 24px;
+                    text-align: center;'>
+            <h2 style='color: #f77f00; margin: 0 0 8px;'>🇮🇳</h2>
+            <h3 style='color: white; margin: 0 0 12px;'>Indian Mass Market</h3>
+            <p style='color: #aaa; font-size: 14px; line-height: 1.8; margin: 0;'>
+                Engage Perfume<br>Fogg Perfume
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.info("👈 Select a brand from the sidebar and click **Analyse Brand** to get started.")
