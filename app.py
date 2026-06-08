@@ -51,11 +51,8 @@ if "audit_result" not in st.session_state:
     st.session_state.audit_result = None
 
 # ------------------ SIDEBAR ------------------
+# ------------------ SIDEBAR ------------------
 st.sidebar.header("🔍 Brand Selection")
-st.sidebar.caption(
-    "Data pulled live from YouTube comments and news articles. "
-    "Sentiment analysed using VADER NLP."
-)
 
 primary_brand = st.sidebar.selectbox(
     "Select primary brand",
@@ -73,8 +70,10 @@ analyse_button = st.sidebar.button("🔍 Analyse Brand", type="primary")
 
 st.sidebar.markdown("---")
 st.sidebar.caption(
-    "📌 Data restricted to fragrance brands for data quality. "
-    "Sentiment via VADER NLP on real consumer comments."
+    "📌 Data Source: 6,500 real YouTube comments and news articles "
+    "collected via YouTube Data API and NewsAPI. "
+    "Sentiment analysed using VADER NLP. "
+    "Data collected: June 2026."
 )
 
 # ------------------ HELPER FUNCTIONS ------------------
