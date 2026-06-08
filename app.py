@@ -198,47 +198,47 @@ st.markdown(f"""
 st.markdown("---")
 
     # ------------------ SENTIMENT BREAKDOWN ------------------
-    st.subheader("📊 Sentiment Breakdown")
-    col1, col2 = st.columns(2)
+st.subheader("📊 Sentiment Breakdown")
+col1, col2 = st.columns(2)
 
-    with col1:
-        sentiment_data = pd.DataFrame({
-            "Sentiment": ["Positive", "Neutral", "Negative"],
-            "Count": [pos, neu, neg],
-            "Percentage": [
-                round((pos/total)*100, 1),
-                round((neu/total)*100, 1),
-                round((neg/total)*100, 1)
-            ]
-        })
-        fig = px.bar(
-            sentiment_data,
-            x="Sentiment",
-            y="Percentage",
-            color="Sentiment",
-            color_discrete_map={
-                "Positive": "#1D9E75",
-                "Neutral": "#B4B2A9",
-                "Negative": "#E24B4A"
-            },
-            title=f"Sentiment Distribution — {primary_brand}"
-        )
-        st.plotly_chart(fig, use_container_width=True)
+with col1:
+    sentiment_data = pd.DataFrame({
+        "Sentiment": ["Positive", "Neutral", "Negative"],
+        "Count": [pos, neu, neg],
+        "Percentage": [
+            round((pos/total)*100, 1),
+            round((neu/total)*100, 1),
+            round((neg/total)*100, 1)
+        ]
+    })
+    fig = px.bar(
+        sentiment_data,
+        x="Sentiment",
+        y="Percentage",
+        color="Sentiment",
+        color_discrete_map={
+            "Positive": "#1D9E75",
+            "Neutral": "#B4B2A9",
+            "Negative": "#E24B4A"
+        },
+        title=f"Sentiment Distribution — {primary_brand}"
+    )
+    st.plotly_chart(fig, use_container_width=True)
 
-    with col2:
-        st.markdown("**Sentiment scores:**")
-        st.markdown(f"🟢 Positive: **{round((pos/total)*100, 1)}%**")
-        st.progress(pos/total)
-        st.markdown(f"⚪ Neutral: **{round((neu/total)*100, 1)}%**")
-        st.progress(neu/total)
-        st.markdown(f"🔴 Negative: **{round((neg/total)*100, 1)}%**")
-        st.progress(neg/total)
-        st.markdown("---")
-        st.markdown("**Data sources:**")
-        st.markdown(f"📺 YouTube: **{yt_count}** comments")
-        st.markdown(f"📰 News: **{news_count}** articles")
-
+with col2:
+    st.markdown("**Sentiment scores:**")
+    st.markdown(f"🟢 Positive: **{round((pos/total)*100, 1)}%**")
+    st.progress(pos/total)
+    st.markdown(f"⚪ Neutral: **{round((neu/total)*100, 1)}%**")
+    st.progress(neu/total)
+    st.markdown(f"🔴 Negative: **{round((neg/total)*100, 1)}%**")
+    st.progress(neg/total)
     st.markdown("---")
+    st.markdown("**Data sources:**")
+    st.markdown(f"📺 YouTube: **{yt_count}** comments")
+    st.markdown(f"📰 News: **{news_count}** articles")
+
+st.markdown("---")
 
     # ------------------ SENTIMENT TREND ------------------
     st.subheader("📈 Sentiment Trend Over Time")
