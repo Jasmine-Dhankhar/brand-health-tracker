@@ -418,49 +418,52 @@ else:
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.markdown("""
-        <div style='background: linear-gradient(135deg, #1a1a2e, #16213e);
-                    border: 1px solid #0f3460;
-                    border-radius: 12px;
-                    padding: 24px;
-                    text-align: center;'>
-            <h2 style='color: #00b4d8; margin: 0 0 8px;'>🌍</h2>
-            <h3 style='color: white; margin: 0 0 12px;'>Global Luxury</h3>
-            <p style='color: #aaa; font-size: 14px; line-height: 1.8; margin: 0;'>
-                Dior Sauvage<br>Creed Aventus<br>YSL Black Opium
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown("""
+    <div style='background: linear-gradient(135deg, #1a1a2e, #16213e);
+                border: 1px solid #0f3460;
+                border-radius: 12px;
+                padding: 24px;
+                text-align: center;
+                min-height: 220px;'>
+        <h2 style='color: #00b4d8; margin: 0 0 8px;'>🌍</h2>
+        <h3 style='color: white; margin: 0 0 12px;'>Global Luxury</h3>
+        <p style='color: #aaa; font-size: 14px; line-height: 1.8; margin: 0;'>
+            Dior Sauvage<br>Creed Aventus<br>YSL Black Opium
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
     with col2:
-        st.markdown("""
-        <div style='background: linear-gradient(135deg, #1a2e1a, #162116);
-                    border: 1px solid #0f6030;
-                    border-radius: 12px;
-                    padding: 24px;
-                    text-align: center;'>
-            <h2 style='color: #06d6a0; margin: 0 0 8px;'>🇮🇳</h2>
-            <h3 style='color: white; margin: 0 0 12px;'>Indian Premium</h3>
-            <p style='color: #aaa; font-size: 14px; line-height: 1.8; margin: 0;'>
-                Skinn by Titan<br>Bella Vita Perfume
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown("""
+    <div style='background: linear-gradient(135deg, #1a2e1a, #162116);
+                border: 1px solid #0f6030;
+                border-radius: 12px;
+                padding: 24px;
+                text-align: center;
+                min-height: 220px;'>
+        <h2 style='color: #06d6a0; margin: 0 0 8px;'>🇮🇳</h2>
+        <h3 style='color: white; margin: 0 0 12px;'>Indian Premium</h3>
+        <p style='color: #aaa; font-size: 14px; line-height: 1.8; margin: 0;'>
+            Skinn by Titan<br>Bella Vita Perfume
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
     with col3:
-        st.markdown("""
-        <div style='background: linear-gradient(135deg, #2e1a1a, #211616);
-                    border: 1px solid #602010;
-                    border-radius: 12px;
-                    padding: 24px;
-                    text-align: center;'>
-            <h2 style='color: #f77f00; margin: 0 0 8px;'>🇮🇳</h2>
-            <h3 style='color: white; margin: 0 0 12px;'>Indian Mass Market</h3>
-            <p style='color: #aaa; font-size: 14px; line-height: 1.8; margin: 0;'>
-                Engage Perfume<br>Fogg Perfume
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown("""
+    <div style='background: linear-gradient(135deg, #2e1a1a, #211616);
+                border: 1px solid #602010;
+                border-radius: 12px;
+                padding: 24px;
+                text-align: center;
+                min-height: 220px;'>
+        <h2 style='color: #f77f00; margin: 0 0 8px;'>🇮🇳</h2>
+        <h3 style='color: white; margin: 0 0 12px;'>Indian Mass Market</h3>
+        <p style='color: #aaa; font-size: 14px; line-height: 1.8; margin: 0;'>
+            Engage Perfume<br>Fogg Perfume
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
     st.info("👈 Select a brand from the sidebar and click **Analyse Brand** to get started.")
